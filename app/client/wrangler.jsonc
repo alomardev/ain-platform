@@ -1,0 +1,13 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "ain-platform",
+	"compatibility_date": "2026-08-01",
+	"pages_build_output_dir": "dist",
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "ain-db",
+			"database_id": "457aba13-92b2-40a9-8833-631dce363a50"
+		}
+	]
+}

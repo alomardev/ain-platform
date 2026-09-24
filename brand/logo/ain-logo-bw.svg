@@ -1,0 +1,20 @@
+<svg width="800" height="1000" viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg">
+  <rect width="800" height="1000" fill="white"/>
+
+  <!-- الشكل الماسي المدور (Squircle) -->
+  <g transform="rotate(45 400 380)">
+    <rect x="170" y="150" width="460" height="460" rx="130" fill="black"/>
+  </g>
+
+  <!-- حرف "ع" أبيض بالمنتصف -->
+  <text x="400" y="420" font-family="Tahoma, 'Segoe UI', Arial, sans-serif" font-size="360"
+        font-weight="700" fill="white" text-anchor="middle" dominant-baseline="middle">ع</text>
+
+  <!-- اسم المنصة بالعربي -->
+  <text x="400" y="760" font-family="Tahoma, 'Segoe UI', Arial, sans-serif" font-size="80"
+        font-weight="700" fill="black" text-anchor="middle">منصة عين</text>
+
+  <!-- اسم المنصة بالإنجليزي (مصحّح) -->
+  <text x="400" y="850" font-family="Arial, sans-serif" font-size="42" letter-spacing="4"
+        font-weight="700" fill="black" text-anchor="middle">AIN PLATFORM</text>
+</svg>

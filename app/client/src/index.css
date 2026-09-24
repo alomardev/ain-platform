@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+@import "tailwindcss";
+
+:root {
+  --accent-light: #1D95A6;
+  --accent-dark: #D6A429;
+  --fund: #7C3AED;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Tajawal', 'Segoe UI', sans-serif;
+}
+
+.ain-accent-solid { background-color: var(--ain-accent); color: var(--ain-accent-contrast); }
+.ain-accent-text { color: var(--ain-accent); }
+.ain-accent-bg-soft { background-color: var(--ain-accent-soft); }
+.ain-accent-hover:hover { border-color: var(--ain-accent-border-soft); }
+.ain-pill-active { background-color: var(--ain-accent); color: var(--ain-accent-contrast); }
