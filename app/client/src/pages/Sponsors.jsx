@@ -40,7 +40,7 @@ export default function Sponsors() {
             onClick={() => setShowAdd(true)}
             className="ain-accent-solid flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold"
           >
-            <Plus className="h-3.5 w-3.5" /> إضافة راعٍ
+            <Plus className="h-3.5 w-3.5" /> <span className="ain-btn-label">إضافة راعٍ</span>
           </button>
         }
       />

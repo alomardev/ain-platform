@@ -25,3 +25,16 @@ body {
 .ain-accent-bg-soft { background-color: var(--ain-accent-soft); }
 .ain-accent-hover:hover { border-color: var(--ain-accent-border-soft); }
 .ain-pill-active { background-color: var(--ain-accent); color: var(--ain-accent-contrast); }
+
+/* Below md the sidebar collapses behind a menu button, so header actions shrink to icon-only. */
+@media (width < 48rem) {
+  .ain-header-actions > button { padding: 0.5rem; }
+  .ain-header-actions .ain-btn-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}

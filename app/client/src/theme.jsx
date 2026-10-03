@@ -18,7 +18,7 @@ export function ThemeProvider({ children }) {
   const accentBorderSoft = dark ? 'rgba(214,164,41,0.45)' : 'rgba(29,149,166,0.35)';
 
   const theme = {
-    bg: dark ? '#0F1115' : '#F7F2E7',
+    bg: dark ? '#0F1115' : '#ECEEF1',
     sidebarBg: dark ? '#14161C' : '#FFFFFF',
     sidebarBorder: dark ? 'border-gray-800' : 'border-gray-200',
     card: dark ? '#171A21' : '#F3F4F6',

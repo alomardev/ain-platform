@@ -1,14 +1,26 @@
 import { useNavigate } from 'react-router-dom';
-import { ChevronRight, Sun, Moon } from 'lucide-react';
+import { ChevronRight, Sun, Moon, Menu } from 'lucide-react';
 import { useTheme } from '../theme';
+import { useSidebar } from './sidebarContext';
 
 export default function PageHeader({ title, backTo, backLabel = 'رجوع', action }) {
   const navigate = useNavigate();
   const { dark, setDark, theme } = useTheme();
+  const sidebar = useSidebar();
 
   return (
-    <div className="flex items-center justify-between mb-6">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center justify-between gap-3 mb-6">
+      <div className="flex items-center gap-3 min-w-0">
+        {sidebar && (
+          <button
+            onClick={() => sidebar.setSidebarOpen(true)}
+            aria-label="فتح القائمة"
+            aria-expanded={sidebar.sidebarOpen}
+            className={`md:hidden ain-accent-hover shrink-0 rounded-full p-2 border transition-colors ${theme.border} ${theme.textSecondary}`}
+          >
+            <Menu className="h-3.5 w-3.5" />
+          </button>
+        )}
         {backTo && (
           <button
             onClick={() => navigate(backTo)}
@@ -18,10 +30,10 @@ export default function PageHeader({ title, backTo, backLabel = 'رجوع', acti
             {backLabel}
           </button>
         )}
-        {title && <h1 className={`text-2xl font-extrabold ${theme.textPrimary}`}>{title}</h1>}
+        {title && <h1 className={`text-2xl font-extrabold truncate ${theme.textPrimary}`}>{title}</h1>}
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="ain-header-actions flex items-center gap-2 shrink-0">
         {action}
         <button
           onClick={() => setDark((d) => !d)}
@@ -30,7 +42,7 @@ export default function PageHeader({ title, backTo, backLabel = 'رجوع', acti
           }`}
         >
           {dark ? <Sun className="h-3.5 w-3.5" /> : <Moon className="h-3.5 w-3.5" />}
-          {dark ? 'الوضع النهاري' : 'الوضع الليلي'}
+          <span className="ain-btn-label">{dark ? 'الوضع النهاري' : 'الوضع الليلي'}</span>
         </button>
       </div>
     </div>

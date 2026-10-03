@@ -11,11 +11,11 @@ export default function StatCard({ icon: Icon, label, value, suffix, compact = f
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">
-        <p className={`${compact ? 'text-lg' : 'text-xl'} font-extrabold truncate ${theme.textPrimary}`}>
+        <p className={`${compact ? 'text-lg break-words' : 'text-xl truncate'} font-extrabold ${theme.textPrimary}`}>
           {value}
           {suffix && <span className={`text-xs font-medium mr-1 ${theme.textSecondary}`}>{suffix}</span>}
         </p>
-        <p className={`text-xs truncate ${theme.textSecondary}`}>{label}</p>
+        <p className={`text-xs ${compact ? 'break-words' : 'truncate'} ${theme.textSecondary}`}>{label}</p>
       </div>
     </div>
   );

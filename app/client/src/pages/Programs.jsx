@@ -6,8 +6,7 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import PillTabs from '../components/PillTabs';
 import ListRow from '../components/ListRow';
-import Modal from '../components/Modal';
-import Field, { inputClass } from '../components/Field';
+import ProgramFormModal from '../components/ProgramFormModal';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber } from '../format';
 import { api } from '../api';
@@ -17,68 +16,6 @@ const TYPE_TABS = [
   { key: 'internal', label: 'داخلي' },
   { key: 'external', label: 'خارجي' },
 ];
-
-function AddProgramModal({ onClose, onSaved }) {
-  const { theme } = useTheme();
-  const [form, setForm] = useState({
-    name: '', description: '', category: 'internal', executor_name: '', location: '',
-    supervisor_name: '', beneficiaries: 0, date_mode: 'single', date: '',
-  });
-  const [saving, setSaving] = useState(false);
-  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
-
-  const submit = async (e) => {
-    e.preventDefault();
-    if (!form.name.trim()) return;
-    setSaving(true);
-    try {
-      const dates = form.date ? [form.date] : [];
-      await api.createProgram({ ...form, beneficiaries: Number(form.beneficiaries) || 0, dates });
-      onSaved();
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  return (
-    <Modal title="إضافة برنامج" onClose={onClose}>
-      <form onSubmit={submit}>
-        <Field label="اسم البرنامج">
-          <input required className={inputClass(theme)} value={form.name} onChange={set('name')} />
-        </Field>
-        <Field label="الوصف">
-          <textarea className={inputClass(theme)} rows={2} value={form.description} onChange={set('description')} />
-        </Field>
-        <Field label="التصنيف">
-          <select className={inputClass(theme)} value={form.category} onChange={set('category')}>
-            <option value="internal">داخلي</option>
-            <option value="external">خارجي</option>
-          </select>
-        </Field>
-        {form.category === 'external' && (
-          <Field label="الجهة المنفذة">
-            <input className={inputClass(theme)} value={form.executor_name} onChange={set('executor_name')} />
-          </Field>
-        )}
-        <Field label="الموقع">
-          <input className={inputClass(theme)} value={form.location} onChange={set('location')} />
-        </Field>
-        <Field label="المشرف">
-          <input className={inputClass(theme)} value={form.supervisor_name} onChange={set('supervisor_name')} />
-        </Field>
-        <Field label="عدد المستفيدين">
-          <input type="number" className={inputClass(theme)} value={form.beneficiaries} onChange={set('beneficiaries')} />
-        </Field>
-        <Field label="تاريخ البرنامج">
-          <input type="date" className={inputClass(theme)} value={form.date} onChange={set('date')} />
-        </Field>
-        <button disabled={saving} type="submit" className="ain-accent-solid w-full rounded-xl py-2.5 font-bold text-sm mt-2 disabled:opacity-60">
-          {saving ? 'جاري الحفظ...' : 'حفظ'}
-        </button>
-      </form>
-    </Modal>
-  );
-}
 
 export default function Programs() {
   const navigate = useNavigate();
@@ -119,7 +56,7 @@ export default function Programs() {
             onClick={() => setShowAdd(true)}
             className="ain-accent-solid flex items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-bold"
           >
-            <Plus className="h-3.5 w-3.5" /> إضافة برنامج
+            <Plus className="h-3.5 w-3.5" /> <span className="ain-btn-label">إضافة برنامج</span>
           </button>
         }
       />
@@ -170,7 +107,7 @@ export default function Programs() {
       </div>
 
       {showAdd && (
-        <AddProgramModal
+        <ProgramFormModal
           onClose={() => setShowAdd(false)}
           onSaved={() => {
             setShowAdd(false);

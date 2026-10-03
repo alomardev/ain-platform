@@ -9,6 +9,9 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import ListRow from '../components/ListRow';
 import RiyalSymbol from '../components/RiyalSymbol';
+import EditDeleteActions from '../components/EditDeleteActions';
+import ProgramFormModal from '../components/ProgramFormModal';
+import ConfirmDialog from '../components/ConfirmDialog';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber } from '../format';
 import { api } from '../api';
@@ -61,10 +64,13 @@ export default function ProgramProfile() {
   const [program, setProgram] = useState(null);
   const [budgetOpen, setBudgetOpen] = useState(false);
   const [notesOpen, setNotesOpen] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
-  useEffect(() => {
+  const load = () => {
     api.program(id).then(setProgram).catch(() => {});
-  }, [id]);
+  };
+  useEffect(load, [id]);
 
   const orderedVolunteers = useMemo(() => {
     if (!program) return [];
@@ -87,7 +93,11 @@ export default function ProgramProfile() {
 
   return (
     <Layout>
-      <PageHeader backTo="/programs" backLabel="البرامج" />
+      <PageHeader
+        backTo="/programs"
+        backLabel="البرامج"
+        action={<EditDeleteActions onEdit={() => setShowEdit(true)} onDelete={() => setShowDelete(true)} />}
+      />
 
       <div className="mb-2">
         <div className="flex items-center gap-2 flex-wrap mb-1">
@@ -108,10 +118,12 @@ export default function ProgramProfile() {
         <p className={`text-sm leading-relaxed mt-3 mb-5 ${theme.textSecondary}`}>{program.description}</p>
       )}
 
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <StatCard compact icon={Handshake} label="المتطوعين" value={formatNumber(program.totalVolunteers)} />
-        <StatCard compact icon={Clock} label="الساعات" value={formatNumber(program.totalHours)} />
-        <StatCard compact icon={HandHeart} label="المستفيدين" value={formatNumber(program.beneficiaries)} />
+      <div className="@container mb-6">
+        <div className="grid grid-cols-1 @lg:grid-cols-3 gap-3">
+          <StatCard compact icon={Handshake} label="المتطوعين" value={formatNumber(program.totalVolunteers)} />
+          <StatCard compact icon={Clock} label="الساعات" value={formatNumber(program.totalHours)} />
+          <StatCard compact icon={HandHeart} label="المستفيدين" value={formatNumber(program.beneficiaries)} />
+        </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
@@ -186,17 +198,17 @@ export default function ProgramProfile() {
         </div>
       </div>
 
-      <div className={`mt-6 rounded-2xl border ${theme.cardBorder} p-4`} style={{ backgroundColor: theme.card }}>
-        <button onClick={() => setBudgetOpen((o) => !o)} className="w-full flex items-center justify-between">
-          <span className="flex items-center gap-2 font-bold text-sm">
+      <div className={`mt-6 rounded-2xl border ${theme.cardBorder} p-4 ${theme.textPrimary}`} style={{ backgroundColor: theme.card }}>
+        <button onClick={() => setBudgetOpen((o) => !o)} className={`w-full flex items-center justify-between ${theme.textPrimary}`}>
+          <span className={`flex items-center gap-2 font-bold text-sm ${theme.textPrimary}`}>
             <Wallet className="h-4 w-4 ain-accent-text" /> ميزانية البرنامج
           </span>
           <span className="flex items-center gap-2">
-            <span className="font-extrabold flex items-center gap-1">
+            <span className={`font-extrabold flex items-center gap-1 ${theme.textPrimary}`}>
               {formatNumber(program.funding.reduce((s, f) => s + f.amount, 0))}
               <RiyalSymbol className="h-3.5" />
             </span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${budgetOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`h-4 w-4 transition-transform ${theme.textSecondary} ${budgetOpen ? 'rotate-180' : ''}`} />
           </span>
         </button>
         {budgetOpen && (
@@ -204,7 +216,9 @@ export default function ProgramProfile() {
             {program.funding.map((f) => (
               <div key={f.id} className="py-2.5 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2 min-w-0">
-                  {f.support_type === 'cash' ? <Wallet className="h-4 w-4 shrink-0" /> : <Package className="h-4 w-4 shrink-0" />}
+                  {f.support_type === 'cash'
+                    ? <Wallet className={`h-4 w-4 shrink-0 ${theme.textSecondary}`} />
+                    : <Package className={`h-4 w-4 shrink-0 ${theme.textSecondary}`} />}
                   <div className="min-w-0">
                     <p className={`text-sm font-medium truncate ${theme.textPrimary}`}>{f.sponsor_name}</p>
                     {f.support_type === 'inkind' && f.inkind_item && (
@@ -212,7 +226,7 @@ export default function ProgramProfile() {
                     )}
                   </div>
                 </div>
-                <span className="text-sm font-semibold flex items-center gap-1 shrink-0">
+                <span className={`text-sm font-semibold flex items-center gap-1 shrink-0 ${theme.textPrimary}`}>
                   {formatNumber(f.amount)}<RiyalSymbol className="h-3" />
                 </span>
               </div>
@@ -224,14 +238,48 @@ export default function ProgramProfile() {
 
       {program.notes && (
         <div className={`mt-4 rounded-2xl border ${theme.cardBorder} p-4`} style={{ backgroundColor: theme.card }}>
-          <button onClick={() => setNotesOpen((o) => !o)} className="w-full flex items-center justify-between">
-            <span className="flex items-center gap-2 font-bold text-sm">
+          <button onClick={() => setNotesOpen((o) => !o)} className={`w-full flex items-center justify-between ${theme.textPrimary}`}>
+            <span className={`flex items-center gap-2 font-bold text-sm ${theme.textPrimary}`}>
               <StickyNote className="h-4 w-4 ain-accent-text" /> الملاحظات
             </span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${notesOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`h-4 w-4 transition-transform ${theme.textSecondary} ${notesOpen ? 'rotate-180' : ''}`} />
           </button>
           {notesOpen && <p className={`mt-3 text-sm leading-relaxed ${theme.textSecondary}`}>{program.notes}</p>}
         </div>
+      )}
+
+      {showEdit && (
+        <ProgramFormModal
+          program={program}
+          onClose={() => setShowEdit(false)}
+          onSaved={() => {
+            setShowEdit(false);
+            load();
+          }}
+        />
+      )}
+
+      {showDelete && (
+        <ConfirmDialog
+          title="حذف برنامج"
+          message={
+            <>
+              <p>هل أنت متأكد من حذف <span className={`font-bold ${theme.textPrimary}`}>{program.name}</span>؟</p>
+              {program.volunteers.length > 0 && (
+                <p className="mt-2 text-red-500">سيتم حذف {formatNumber(program.volunteers.length)} مشاركة مرتبطة به أيضاً.</p>
+              )}
+              {program.funding.length > 0 && (
+                <p className="mt-2">سيتم تحويل {formatNumber(program.funding.length)} دعمة مرتبطة به إلى دعم الصندوق.</p>
+              )}
+              <p className="mt-2">لا يمكن التراجع عن هذا الإجراء.</p>
+            </>
+          }
+          onClose={() => setShowDelete(false)}
+          onConfirm={async () => {
+            await api.deleteProgram(program.id);
+            navigate('/programs');
+          }}
+        />
       )}
     </Layout>
   );
