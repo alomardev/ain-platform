@@ -10,8 +10,12 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "db:migrate:local": "wrangler d1 execute ain-db --local --file=migrations/0001_schema.sql && wrangler d1 execute ain-db --local --file=migrations/0002_seed.sql",
-    "db:migrate:remote": "wrangler d1 execute ain-db --remote --file=migrations/0001_schema.sql && wrangler d1 execute ain-db --remote --file=migrations/0002_seed.sql"
+    "db:migrate:local": "wrangler d1 execute ain-db --local --file=migrations/0001_schema.sql && wrangler d1 execute ain-db --local --file=migrations/0002_seed.sql && npm run db:update:local",
+    "db:migrate:remote": "wrangler d1 execute ain-db --remote --file=migrations/0001_schema.sql && wrangler d1 execute ain-db --remote --file=migrations/0002_seed.sql && npm run db:update:remote",
+    "db:update:local": "wrangler d1 execute ain-db --local --file=migrations/0003_volunteer_national_id.sql",
+    "db:update:remote": "wrangler d1 execute ain-db --remote --file=migrations/0003_volunteer_national_id.sql",
+    "dev:resizer": "wrangler dev -c ../image-resizer/wrangler.jsonc",
+    "deploy:resizer": "wrangler deploy -c ../image-resizer/wrangler.jsonc"
   },
   "dependencies": {
     "lucide-react": "^1.33.0",

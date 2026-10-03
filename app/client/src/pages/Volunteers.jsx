@@ -6,7 +6,7 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import PillTabs from '../components/PillTabs';
 import ListRow from '../components/ListRow';
-import GenderIcon from '../components/GenderIcon';
+import Avatar from '../components/Avatar';
 import VolunteerFormModal from '../components/VolunteerFormModal';
 import { useTheme } from '../theme';
 import { formatNumber } from '../format';
@@ -84,11 +84,7 @@ export default function Volunteers() {
           <ListRow
             key={v.id}
             onClick={() => navigate(`/volunteers/${v.id}`)}
-            leading={
-              <div className="h-10 w-10 rounded-full ain-accent-bg-soft flex items-center justify-center shrink-0">
-                <GenderIcon gender={v.gender} />
-              </div>
-            }
+            leading={<Avatar photo={v.photo} gender={v.gender} />}
             main={v.name}
             meta={`${v.total_programs} برنامج`}
             trailing={

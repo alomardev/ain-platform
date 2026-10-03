@@ -9,5 +9,19 @@
 			"database_name": "ain-db",
 			"database_id": "457aba13-92b2-40a9-8833-631dce363a50"
 		}
+	],
+	// Volunteer avatars (served by functions/api/images/[[path]].js).
+	"r2_buckets": [
+		{
+			"binding": "AVATARS",
+			"bucket_name": "ain-avatars"
+		}
+	],
+	// Resizes uploads with Cloudflare Images; source in ../image-resizer.
+	"services": [
+		{
+			"binding": "IMAGE_RESIZER",
+			"service": "ain-image-resizer"
+		}
 	]
 }

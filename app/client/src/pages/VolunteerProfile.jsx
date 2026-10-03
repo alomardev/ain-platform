@@ -6,7 +6,7 @@ import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
 import PillTabs from '../components/PillTabs';
 import ListRow from '../components/ListRow';
-import GenderIcon from '../components/GenderIcon';
+import Avatar from '../components/Avatar';
 import EditDeleteActions from '../components/EditDeleteActions';
 import VolunteerFormModal from '../components/VolunteerFormModal';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -79,9 +79,7 @@ export default function VolunteerProfile() {
       />
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="h-20 w-20 rounded-full ain-accent-bg-soft flex items-center justify-center shrink-0">
-          <GenderIcon gender={volunteer.gender} className="h-9 w-9" />
-        </div>
+        <Avatar photo={volunteer.photo} gender={volunteer.gender} alt={volunteer.name} className="h-20 w-20" iconClassName="h-9 w-9" />
         <div>
           <h1 className={`text-xl font-extrabold ain-accent-text`}>{volunteer.name}</h1>
           <span className={`inline-block mt-1 text-xs font-semibold px-2.5 py-0.5 rounded-full ${
@@ -101,7 +99,7 @@ export default function VolunteerProfile() {
         <div>
           <h2 className={`text-sm font-bold mb-2 ${theme.textPrimary}`}>البيانات الشخصية</h2>
           <div className={`rounded-2xl border ${theme.cardBorder} px-4 divide-y ${theme.divide}`} style={{ backgroundColor: theme.card }}>
-            <DetailRow icon={CreditCard} label="رقم الهوية" value={volunteer.national_id} />
+            <DetailRow icon={CreditCard} label="رقم الهوية الوطنية" value={volunteer.national_id} />
             <DetailRow icon={Cake} label="تاريخ الميلاد" value={formatDate(volunteer.birth_date)} />
             <DetailRow icon={Phone} label="رقم الجوال" value={volunteer.phone} />
             <DetailRow icon={Mail} label="البريد الإلكتروني" value={volunteer.email} />

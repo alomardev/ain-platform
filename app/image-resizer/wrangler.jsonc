@@ -1,0 +1,10 @@
+{
+	"$schema": "../client/node_modules/wrangler/config-schema.json",
+	"name": "ain-image-resizer",
+	"main": "src/index.js",
+	"compatibility_date": "2026-08-01",
+	// Reachable only through the IMAGE_RESIZER service binding of the Pages project, never publicly.
+	"workers_dev": false,
+	"preview_urls": false,
+	"images": { "binding": "IMAGES" }
+}
