@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Modal from './Modal';
 import Field, { inputClass } from './Field';
+import TagInput from './TagInput';
 import { useTheme } from '../theme';
 import { formatDate } from '../format';
 import { api } from '../api';
@@ -18,6 +19,7 @@ export default function ProgramFormModal({ program, onClose, onSaved }) {
   const [form, setForm] = useState(() => ({
     ...Object.fromEntries(Object.keys(DEFAULTS).map((k) => [k, program?.[k] ?? DEFAULTS[k]])),
     date: program?.date_mode === 'single' ? program.dates[0] ?? '' : '',
+    partners: program?.partners?.map((p) => p.name) ?? [],
   }));
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
@@ -67,6 +69,13 @@ export default function ProgramFormModal({ program, onClose, onSaved }) {
         </Field>
         <Field label="المشرف">
           <input className={inputClass(theme)} value={form.supervisor_name} onChange={set('supervisor_name')} />
+        </Field>
+        <Field as="div" label="الجهات المشاركة">
+          <TagInput
+            value={form.partners}
+            onChange={(partners) => setForm((f) => ({ ...f, partners }))}
+            placeholder="اكتب اسم الجهة ثم اضغط Enter"
+          />
         </Field>
         <Field label="عدد المستفيدين">
           <input type="number" className={inputClass(theme)} value={form.beneficiaries} onChange={set('beneficiaries')} />

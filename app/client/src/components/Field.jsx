@@ -1,12 +1,13 @@
 import { useTheme } from '../theme';
 
-export default function Field({ label, children }) {
+// Pass as="div" when children hold several controls (a <label> would forward clicks to the first one).
+export default function Field({ label, children, as: Tag = 'label' }) {
   const { theme } = useTheme();
   return (
-    <label className="block mb-3">
+    <Tag className="block mb-3">
       <span className={`block text-xs font-semibold mb-1.5 ${theme.textSecondary}`}>{label}</span>
       {children}
-    </label>
+    </Tag>
   );
 }
 

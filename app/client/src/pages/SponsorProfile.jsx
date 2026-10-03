@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Handshake, Building2, Wallet, Landmark, HeartHandshake, Package } from 'lucide-react';
+import { Handshake, Building2, Wallet, Landmark, HeartHandshake, Package, Plus } from 'lucide-react';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
@@ -9,6 +9,7 @@ import GenderIcon from '../components/GenderIcon';
 import RiyalSymbol from '../components/RiyalSymbol';
 import EditDeleteActions from '../components/EditDeleteActions';
 import SponsorFormModal from '../components/SponsorFormModal';
+import DonationFormModal from '../components/DonationFormModal';
 import ConfirmDialog from '../components/ConfirmDialog';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber, yearOf } from '../format';
@@ -22,6 +23,8 @@ export default function SponsorProfile() {
   const [yearFilter, setYearFilter] = useState('all');
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  // null = closed, {} = add, donation object = edit
+  const [donationModal, setDonationModal] = useState(null);
 
   const load = () => {
     api.sponsor(id).then(setSponsor).catch(() => {});
@@ -66,7 +69,7 @@ export default function SponsorProfile() {
         <div>
           <h1 className={`text-xl font-extrabold ain-accent-text`}>{sponsor.name}</h1>
           <p className={`text-xs mt-1 ${theme.textSecondary}`}>
-            {sponsor.category === 'company' ? 'شركة' : 'شخص'} · متعاون منذ {formatDate(sponsor.since)}
+            {sponsor.category === 'company' ? 'شركة' : 'شخص'}
           </p>
           <p className={`text-xs mt-1 ${theme.textMuted}`}>{sponsor.phone} {sponsor.email && `· ${sponsor.email}`}</p>
         </div>
@@ -79,6 +82,12 @@ export default function SponsorProfile() {
 
       <div className="flex items-center justify-between mb-2">
         <h2 className={`text-sm font-bold ${theme.textPrimary}`}>سجل الدعم</h2>
+        <button
+          onClick={() => setDonationModal({})}
+          className={`ain-accent-hover flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${theme.border} ${theme.textSecondary}`}
+        >
+          <Plus className="h-3.5 w-3.5" /> إضافة دعم
+        </button>
       </div>
       <div className="mb-3">
         <PillTabs items={yearTabs} value={yearFilter} onChange={setYearFilter} />
@@ -90,8 +99,8 @@ export default function SponsorProfile() {
           return (
             <button
               key={d.id}
-              onClick={() => d.program_id && navigate(`/programs/${d.program_id}`)}
-              className={`w-full flex items-center gap-3 py-3.5 px-1 border-b ${theme.border} ${d.program_id ? theme.hover : ''} transition-colors text-right`}
+              onClick={() => setDonationModal(d)}
+              className={`w-full flex items-center gap-3 py-3.5 px-1 border-b ${theme.border} ${theme.hover} transition-colors text-right`}
             >
               <div
                 className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${
@@ -118,7 +127,7 @@ export default function SponsorProfile() {
           );
         })}
         {filteredDonations.length === 0 && (
-          <p className={`text-sm py-8 text-center ${theme.textSecondary}`}>لا توجد دعمات مسجلة</p>
+          <p className={`text-sm py-8 text-center ${theme.textSecondary}`}>لا يوجد دعم مسجل</p>
         )}
       </div>
 
@@ -133,6 +142,18 @@ export default function SponsorProfile() {
         />
       )}
 
+      {donationModal && (
+        <DonationFormModal
+          sponsorId={sponsor.id}
+          donation={donationModal.id ? donationModal : null}
+          onClose={() => setDonationModal(null)}
+          onSaved={() => {
+            setDonationModal(null);
+            load();
+          }}
+        />
+      )}
+
       {showDelete && (
         <ConfirmDialog
           title="حذف راعٍ"
@@ -140,7 +161,7 @@ export default function SponsorProfile() {
             <>
               <p>هل أنت متأكد من حذف <span className={`font-bold ${theme.textPrimary}`}>{sponsor.name}</span>؟</p>
               {sponsor.donations.length > 0 && (
-                <p className="mt-2 text-red-500">سيتم حذف {formatNumber(sponsor.donations.length)} دعمة مرتبطة به أيضاً.</p>
+                <p className="mt-2 text-red-500">سيتم حذف {formatNumber(sponsor.donations.length)} دعم مرتبط به أيضاً.</p>
               )}
               <p className="mt-2">لا يمكن التراجع عن هذا الإجراء.</p>
             </>

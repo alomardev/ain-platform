@@ -74,8 +74,8 @@ export default function Sponsors() {
               </div>
             }
             main={s.name}
-            meta={`${s.category === 'company' ? 'شركة' : 'شخص'} · متعاون منذ ${(s.since || '').slice(0, 4)}`}
-            trailing={<span className={`text-xs font-semibold ${theme.textSecondary}`}>{s.donation_count} دعمة</span>}
+            meta={s.category === 'company' ? 'شركة' : 'شخص'}
+            trailing={<span className={`text-xs font-semibold ${theme.textSecondary}`}>{s.donation_count} دعم</span>}
           />
         ))}
         {!loading && filtered.length === 0 && (

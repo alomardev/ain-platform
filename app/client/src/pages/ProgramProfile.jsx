@@ -204,6 +204,7 @@ export default function ProgramProfile() {
             <Wallet className="h-4 w-4 ain-accent-text" /> ميزانية البرنامج
           </span>
           <span className="flex items-center gap-2">
+            <span className={`text-xs font-semibold ${theme.textSecondary}`}>{formatNumber(program.funding.length)} دعم</span>
             <span className={`font-extrabold flex items-center gap-1 ${theme.textPrimary}`}>
               {formatNumber(program.funding.reduce((s, f) => s + f.amount, 0))}
               <RiyalSymbol className="h-3.5" />
@@ -214,7 +215,11 @@ export default function ProgramProfile() {
         {budgetOpen && (
           <div className={`mt-3 divide-y ${theme.divide}`}>
             {program.funding.map((f) => (
-              <div key={f.id} className="py-2.5 flex items-center justify-between gap-3">
+              <button
+                key={f.id}
+                onClick={() => navigate(`/sponsors/${f.sponsor_id}`)}
+                className={`w-full py-2.5 px-1 flex items-center justify-between gap-3 text-right rounded-lg ${theme.hover} transition-colors`}
+              >
                 <div className="flex items-center gap-2 min-w-0">
                   {f.support_type === 'cash'
                     ? <Wallet className={`h-4 w-4 shrink-0 ${theme.textSecondary}`} />
@@ -229,9 +234,9 @@ export default function ProgramProfile() {
                 <span className={`text-sm font-semibold flex items-center gap-1 shrink-0 ${theme.textPrimary}`}>
                   {formatNumber(f.amount)}<RiyalSymbol className="h-3" />
                 </span>
-              </div>
+              </button>
             ))}
-            {program.funding.length === 0 && <p className={`text-sm py-3 ${theme.textSecondary}`}>لا توجد مساهمات مسجلة</p>}
+            {program.funding.length === 0 && <p className={`text-sm py-3 ${theme.textSecondary}`}>لا يوجد دعم مسجل</p>}
           </div>
         )}
       </div>
@@ -269,7 +274,7 @@ export default function ProgramProfile() {
                 <p className="mt-2 text-red-500">سيتم حذف {formatNumber(program.volunteers.length)} مشاركة مرتبطة به أيضاً.</p>
               )}
               {program.funding.length > 0 && (
-                <p className="mt-2">سيتم تحويل {formatNumber(program.funding.length)} دعمة مرتبطة به إلى دعم الصندوق.</p>
+                <p className="mt-2">سيتم تحويل {formatNumber(program.funding.length)} دعم مرتبط به إلى دعم الصندوق.</p>
               )}
               <p className="mt-2">لا يمكن التراجع عن هذا الإجراء.</p>
             </>
