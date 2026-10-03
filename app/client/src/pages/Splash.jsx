@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../theme';
+import AinMark from '../components/AinMark';
 
 export default function Splash() {
   const navigate = useNavigate();
@@ -23,11 +24,7 @@ export default function Splash() {
       </button>
 
       <div className="flex flex-col items-center text-center max-w-sm">
-        <img
-          src={dark ? '/logo/mark-gold.png' : '/logo/mark-teal.png'}
-          alt="شعار عين"
-          className="w-28 h-28 object-contain mb-5"
-        />
+        <AinMark className="w-28 h-28 mb-5" title="شعار عين" />
 
         <h1 className={`text-3xl font-extrabold mb-1 ${theme.textPrimary}`}>
           <span className="ain-accent-text">عين</span> .. لخدمة المتطوعين

@@ -66,7 +66,7 @@ export default function DonationFormModal({ sponsorId, donation, onClose, onSave
   };
 
   return (
-    <Modal title={isEdit ? 'تعديل دعم' : 'إضافة دعم'} onClose={saving ? () => {} : onClose}>
+    <Modal title={isEdit ? 'تعديل دعم' : 'إضافة دعم'} onClose={onClose} busy={saving}>
       <form onSubmit={submit}>
         <SegmentedControl
           name="target"

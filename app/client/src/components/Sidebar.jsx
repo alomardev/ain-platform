@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { Home, Users, ClipboardList, Handshake, Info, X } from 'lucide-react';
 import { useTheme } from '../theme';
+import AinMark from './AinMark';
 
 const navItems = [
   { to: '/dashboard', label: 'الرئيسية', icon: Home },
@@ -10,7 +11,7 @@ const navItems = [
 ];
 
 export default function Sidebar({ open = false, onClose }) {
-  const { dark, theme } = useTheme();
+  const { theme } = useTheme();
 
   return (
     <>
@@ -26,7 +27,7 @@ export default function Sidebar({ open = false, onClose }) {
         style={{ backgroundColor: theme.sidebarBg }}
       >
         <div className="flex items-center gap-2 px-5 py-6">
-          <img src={dark ? '/logo/mark-gold.png' : '/logo/mark-teal.png'} alt="عين" className="h-9 w-9 object-contain" />
+          <AinMark className="h-9 w-9" />
           <span className={`font-extrabold text-lg ain-accent-text`}>عين</span>
           <button
             onClick={onClose}

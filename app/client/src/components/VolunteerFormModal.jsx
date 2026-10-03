@@ -67,7 +67,7 @@ export default function VolunteerFormModal({ volunteer, onClose, onSaved }) {
   const close = savedId && !volunteer ? onSaved : onClose;
 
   return (
-    <Modal title={volunteer ? 'تعديل متطوع' : 'إضافة متطوع'} onClose={close}>
+    <Modal title={volunteer ? 'تعديل متطوع' : 'إضافة متطوع'} onClose={close} busy={saving}>
       <form onSubmit={submit} noValidate>
         <AvatarUpload
           currentPhoto={volunteer?.photo}
@@ -85,7 +85,7 @@ export default function VolunteerFormModal({ volunteer, onClose, onSaved }) {
             autoComplete="off"
             dir="ltr"
             maxLength={10}
-            placeholder="10 أرقام"
+            placeholder="1012345678"
             className={`${inputClass(theme, errors.national_id)} text-right`}
             value={form.national_id}
             onChange={(e) => setValue('national_id', normalizeNationalId(e.target.value).slice(0, 10))}

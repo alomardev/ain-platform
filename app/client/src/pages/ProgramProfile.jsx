@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Clock, HandHeart, Handshake, ChevronDown, Calendar, MapPin, UserCircle2,
-  Building2, Crown, StickyNote, Wallet, Package,
+  Building2, Crown, StickyNote, Wallet, Package, Plus, Pencil,
 } from 'lucide-react';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
@@ -12,6 +12,9 @@ import RiyalSymbol from '../components/RiyalSymbol';
 import EditDeleteActions from '../components/EditDeleteActions';
 import ProgramFormModal from '../components/ProgramFormModal';
 import ConfirmDialog from '../components/ConfirmDialog';
+import Avatar from '../components/Avatar';
+import AddVolunteersDialog from '../components/AddVolunteersDialog';
+import ParticipationFormModal from '../components/ParticipationFormModal';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber } from '../format';
 import { api } from '../api';
@@ -66,6 +69,8 @@ export default function ProgramProfile() {
   const [notesOpen, setNotesOpen] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showAddVolunteers, setShowAddVolunteers] = useState(false);
+  const [editing, setEditing] = useState(null); // participation being edited
 
   const load = () => {
     api.program(id).then(setProgram).catch(() => {});
@@ -106,9 +111,6 @@ export default function ProgramProfile() {
             program.category === 'internal' ? 'ain-accent-bg-soft' : 'bg-violet-500/15 text-violet-500'
           }`}>
             {program.category === 'internal' ? 'داخلي' : 'خارجي'}
-          </span>
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-green-500/15 text-green-600">
-            {program.status}
           </span>
         </div>
         <p className={`text-sm ${theme.textSecondary}`}>{firstDate}</p>
@@ -171,29 +173,51 @@ export default function ProgramProfile() {
         </div>
 
         <div>
-          <h2 className={`text-sm font-bold mb-2 ${theme.textPrimary}`}>قائمة المتطوعين</h2>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className={`text-sm font-bold ${theme.textPrimary}`}>قائمة المتطوعين</h2>
+            <button
+              onClick={() => setShowAddVolunteers(true)}
+              className="ain-accent-solid flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold"
+            >
+              <Plus className="h-3.5 w-3.5" /> إضافة متطوعين
+            </button>
+          </div>
           <div>
             {orderedVolunteers.map((v) => (
               <ListRow
                 key={v.id}
                 onClick={() => navigate(`/volunteers/${v.id}`)}
                 leading={
-                  v.is_supervisor || v.is_deputy ? (
-                    <div className="h-9 w-9 rounded-full ain-accent-solid flex items-center justify-center shrink-0 relative">
-                      <Crown className="h-4.5 w-4.5" />
-                      {v.is_deputy && <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-3 h-0.5 bg-current rounded" />}
-                    </div>
-                  ) : (
-                    <div className="h-9 w-9 rounded-full ain-accent-bg-soft flex items-center justify-center shrink-0">
-                      <UserCircle2 className="h-4.5 w-4.5" />
-                    </div>
-                  )
+                  <div className="relative shrink-0">
+                    <Avatar photo={v.photo} gender={v.gender} alt={v.name} className="h-9 w-9" iconClassName="h-4.5 w-4.5" />
+                    {(v.is_supervisor === 1 || v.is_deputy === 1) && (
+                      <span
+                        title={v.role}
+                        className="absolute -bottom-1 -left-1 h-5 w-5 rounded-full ain-accent-solid flex items-center justify-center border-2"
+                        style={{ borderColor: theme.bg }}
+                      >
+                        <Crown className="h-2.5 w-2.5" />
+                      </span>
+                    )}
+                  </div>
                 }
                 main={v.name}
                 meta={v.role}
                 trailing={<span className={`text-xs font-semibold ${theme.textSecondary}`}>{formatNumber(v.hours)} س</span>}
+                actions={
+                  <button
+                    aria-label={`تعديل مشاركة ${v.name}`}
+                    onClick={() => setEditing(v)}
+                    className={`rounded-full p-2 transition-colors ${theme.textSecondary} ${theme.hover}`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                }
               />
             ))}
+            {orderedVolunteers.length === 0 && (
+              <p className={`text-sm py-6 text-center ${theme.textSecondary}`}>لا يوجد متطوعون في هذا البرنامج بعد</p>
+            )}
           </div>
         </div>
       </div>
@@ -251,6 +275,30 @@ export default function ProgramProfile() {
           </button>
           {notesOpen && <p className={`mt-3 text-sm leading-relaxed ${theme.textSecondary}`}>{program.notes}</p>}
         </div>
+      )}
+
+      {showAddVolunteers && (
+        <AddVolunteersDialog
+          program={program}
+          onClose={() => setShowAddVolunteers(false)}
+          onSaved={() => {
+            setShowAddVolunteers(false);
+            load();
+          }}
+        />
+      )}
+
+      {editing && (
+        <ParticipationFormModal
+          participation={editing}
+          volunteerName={editing.name}
+          programName={program.name}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            load();
+          }}
+        />
       )}
 
       {showEdit && (

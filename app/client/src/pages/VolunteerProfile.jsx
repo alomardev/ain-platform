@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Clock, ClipboardList, Phone, Mail, CreditCard, Cake, Briefcase, GraduationCap, Calendar } from 'lucide-react';
+import { Clock, ClipboardList, Phone, Mail, CreditCard, Cake, Briefcase, GraduationCap, Calendar, Plus, Pencil } from 'lucide-react';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
@@ -10,6 +10,8 @@ import Avatar from '../components/Avatar';
 import EditDeleteActions from '../components/EditDeleteActions';
 import VolunteerFormModal from '../components/VolunteerFormModal';
 import ConfirmDialog from '../components/ConfirmDialog';
+import JoinProgramDialog from '../components/JoinProgramDialog';
+import ParticipationFormModal from '../components/ParticipationFormModal';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber, yearOf } from '../format';
 import { api } from '../api';
@@ -38,6 +40,8 @@ export default function VolunteerProfile() {
   const [yearFilter, setYearFilter] = useState('all');
   const [showEdit, setShowEdit] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showJoin, setShowJoin] = useState(false);
+  const [editing, setEditing] = useState(null); // participation being edited
 
   const load = () => {
     api.volunteer(id).then(setVolunteer).catch(() => {});
@@ -112,6 +116,12 @@ export default function VolunteerProfile() {
         <div>
           <div className="flex items-center justify-between mb-2">
             <h2 className={`text-sm font-bold ${theme.textPrimary}`}>سجل المشاركات</h2>
+            <button
+              onClick={() => setShowJoin(true)}
+              className="ain-accent-solid flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold"
+            >
+              <Plus className="h-3.5 w-3.5" /> إضافة إلى برنامج
+            </button>
           </div>
           <div className="mb-2">
             <PillTabs items={yearTabs} value={yearFilter} onChange={setYearFilter} />
@@ -124,6 +134,15 @@ export default function VolunteerProfile() {
                 main={p.name}
                 meta={`${p.role} · ${formatDate(p.date)}`}
                 trailing={<span className={`text-xs font-semibold ${theme.textSecondary}`}>{formatNumber(p.hours)} س</span>}
+                actions={
+                  <button
+                    aria-label={`تعديل المشاركة في ${p.name}`}
+                    onClick={() => setEditing(p)}
+                    className={`rounded-full p-2 transition-colors ${theme.textSecondary} ${theme.hover}`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </button>
+                }
               />
             ))}
             {filteredPrograms.length === 0 && (
@@ -132,6 +151,30 @@ export default function VolunteerProfile() {
           </div>
         </div>
       </div>
+
+      {showJoin && (
+        <JoinProgramDialog
+          volunteer={volunteer}
+          onClose={() => setShowJoin(false)}
+          onSaved={() => {
+            setShowJoin(false);
+            load();
+          }}
+        />
+      )}
+
+      {editing && (
+        <ParticipationFormModal
+          participation={editing}
+          volunteerName={volunteer.name}
+          programName={editing.name}
+          onClose={() => setEditing(null)}
+          onSaved={() => {
+            setEditing(null);
+            load();
+          }}
+        />
+      )}
 
       {showEdit && (
         <VolunteerFormModal

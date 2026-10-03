@@ -33,7 +33,7 @@ export default function SponsorFormModal({ sponsor, onClose, onSaved }) {
   };
 
   return (
-    <Modal title={isEdit ? 'تعديل راعٍ' : 'إضافة راعٍ'} onClose={onClose}>
+    <Modal title={isEdit ? 'تعديل راعٍ' : 'إضافة راعٍ'} onClose={onClose} busy={saving}>
       <form onSubmit={submit}>
         <Field label="الاسم">
           <input required className={inputClass(theme)} value={form.name} onChange={set('name')} />

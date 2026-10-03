@@ -13,7 +13,7 @@ export async function onRequestGet({ env, params }) {
 
   const [volunteers, sponsors, partners, funding, totals] = await Promise.all([
     env.DB.prepare(`
-      SELECT v.id, v.name, v.gender, part.role, part.hours, part.is_supervisor, part.is_deputy
+      SELECT v.id, v.name, v.gender, v.photo, part.id AS participation_id, part.role, part.hours, part.is_supervisor, part.is_deputy
       FROM participations part
       JOIN volunteers v ON v.id = part.volunteer_id
       WHERE part.program_id = ?

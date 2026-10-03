@@ -13,6 +13,21 @@ export function ThemeProvider({ children }) {
   }, [dark]);
 
   const accent = dark ? ACCENT_DARK : ACCENT_LIGHT;
+
+  // Recolor the favicon to the in-app accent instead of the OS color scheme.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/favicon.svg')
+      .then((r) => r.text())
+      .then((svg) => {
+        const link = document.querySelector('link[rel="icon"]');
+        if (cancelled || !link) return;
+        const recolored = svg.replace(/<style>[\s\S]*?<\/style>/, `<style>.bg{fill:${accent}}</style>`);
+        link.href = `data:image/svg+xml,${encodeURIComponent(recolored)}`;
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [accent]);
   const accentContrast = dark ? '#1A1305' : '#FFFFFF';
   const accentSoft = dark ? 'rgba(214,164,41,0.15)' : 'rgba(29,149,166,0.12)';
   const accentBorderSoft = dark ? 'rgba(214,164,41,0.45)' : 'rgba(29,149,166,0.35)';

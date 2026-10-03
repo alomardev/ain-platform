@@ -43,4 +43,8 @@ export const api = {
   updateDonation: (id, data) => request(`/donations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
   deleteDonation: (id) => request(`/donations/${id}`, { method: 'DELETE' }),
   createParticipation: (data) => request('/participations', { method: 'POST', body: JSON.stringify(data) }),
+  updateParticipation: (id, data) => request(`/participations/${id}`, { method: 'PUT', body: JSON.stringify(data) }),
+  deleteParticipation: (id) => request(`/participations/${id}`, { method: 'DELETE' }),
+  addProgramVolunteers: (programId, members) =>
+    request(`/programs/${programId}/volunteers`, { method: 'POST', body: JSON.stringify({ members }) }),
 };

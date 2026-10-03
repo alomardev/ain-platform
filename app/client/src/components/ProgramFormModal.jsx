@@ -45,7 +45,7 @@ export default function ProgramFormModal({ program, onClose, onSaved }) {
   };
 
   return (
-    <Modal title={isEdit ? 'تعديل برنامج' : 'إضافة برنامج'} onClose={onClose}>
+    <Modal title={isEdit ? 'تعديل برنامج' : 'إضافة برنامج'} onClose={onClose} busy={saving}>
       <form onSubmit={submit}>
         <Field label="اسم البرنامج">
           <input required className={inputClass(theme)} value={form.name} onChange={set('name')} />

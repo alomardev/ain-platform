@@ -15,6 +15,10 @@
 		{
 			"binding": "AVATARS",
 			"bucket_name": "ain-avatars"
+		},
+		{
+			"bucket_name": "ain-avatars",
+			"binding": "ain_avatars"
 		}
 	],
 	// Resizes uploads with Cloudflare Images; source in ../image-resizer.

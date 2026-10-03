@@ -19,7 +19,7 @@ export default function ConfirmDialog({ title, message, confirmLabel = 'حذف',
   };
 
   return (
-    <Modal title={title} onClose={busy ? () => {} : onClose}>
+    <Modal title={title} onClose={onClose} busy={busy}>
       <div className={`text-sm leading-relaxed mb-5 ${theme.textSecondary}`}>{message}</div>
       {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
       <div className="flex gap-2">
