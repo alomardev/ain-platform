@@ -3,6 +3,7 @@
 	"name": "ain-platform",
 	"compatibility_date": "2026-08-01",
 	"pages_build_output_dir": "dist",
+	"compatibility_flags": ["nodejs_compat"],
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -27,5 +28,9 @@
 			"binding": "IMAGE_RESIZER",
 			"service": "ain-image-resizer"
 		}
-	]
+	],
+	// Headless Chromium for volunteer profile PDFs (functions/api/volunteers/[id]/pdf.js).
+	"browser": {
+		"binding": "BROWSER"
+	}
 }

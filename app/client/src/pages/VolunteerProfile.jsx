@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Clock, ClipboardList, Phone, Mail, CreditCard, Cake, Briefcase, GraduationCap, Calendar, Plus, Pencil } from 'lucide-react';
+import { Clock, ClipboardList, Phone, Mail, CreditCard, Cake, Briefcase, GraduationCap, Calendar, Plus, Pencil, Download, Loader2 } from 'lucide-react';
 import Layout from '../components/Layout';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
@@ -15,6 +15,7 @@ import ParticipationFormModal from '../components/ParticipationFormModal';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber, yearOf } from '../format';
 import { api } from '../api';
+import { downloadVolunteerPdf } from '../volunteerPdf';
 
 function DetailRow({ icon: Icon, label, value }) {
   const { theme } = useTheme();
@@ -42,6 +43,18 @@ export default function VolunteerProfile() {
   const [showDelete, setShowDelete] = useState(false);
   const [showJoin, setShowJoin] = useState(false);
   const [editing, setEditing] = useState(null); // participation being edited
+  const [downloading, setDownloading] = useState(false);
+
+  const downloadPdf = async () => {
+    setDownloading(true);
+    try {
+      await downloadVolunteerPdf(volunteer);
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   const load = () => {
     api.volunteer(id).then(setVolunteer).catch(() => {});
@@ -79,7 +92,20 @@ export default function VolunteerProfile() {
       <PageHeader
         backTo="/volunteers"
         backLabel="المتطوعون"
-        action={<EditDeleteActions onEdit={() => setShowEdit(true)} onDelete={() => setShowDelete(true)} />}
+        action={
+          <>
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              aria-label="تحميل ملف المتطوع"
+              className={`ain-accent-hover flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium border transition-colors disabled:opacity-60 ${theme.border} ${theme.textSecondary}`}
+            >
+              {downloading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Download className="h-3.5 w-3.5" />}
+              <span className="ain-btn-label">{downloading ? 'جاري التحميل...' : 'تحميل ملف المتطوع'}</span>
+            </button>
+            <EditDeleteActions onEdit={() => setShowEdit(true)} onDelete={() => setShowDelete(true)} />
+          </>
+        }
       />
 
       <div className="flex items-center gap-4 mb-6">

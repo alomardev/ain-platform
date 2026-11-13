@@ -17,6 +17,7 @@ import AddVolunteersDialog from '../components/AddVolunteersDialog';
 import ParticipationFormModal from '../components/ParticipationFormModal';
 import { useTheme } from '../theme';
 import { formatDate, formatNumber } from '../format';
+import { dateSummary, daysCount } from '../programState';
 import { api } from '../api';
 
 function DetailRow({ icon: Icon, label, value }) {
@@ -42,22 +43,6 @@ function Chip({ children }) {
       {children}
     </span>
   );
-}
-
-function dateSummary(program) {
-  if (program.date_mode === 'single') return formatDate(program.dates[0]);
-  if (program.date_mode === 'range') return `${formatDate(program.dates[0])} — ${formatDate(program.dates[1])}`;
-  return program.dates.map(formatDate).join('، ');
-}
-
-function daysCount(program) {
-  if (program.date_mode === 'single') return 1;
-  if (program.date_mode === 'range') {
-    const [a, b] = program.dates;
-    if (!a || !b) return 1;
-    return Math.round((new Date(b) - new Date(a)) / 86400000) + 1;
-  }
-  return program.dates.length;
 }
 
 export default function ProgramProfile() {

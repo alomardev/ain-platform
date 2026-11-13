@@ -18,6 +18,7 @@
     "deploy:resizer": "wrangler deploy -c ../image-resizer/wrangler.jsonc"
   },
   "dependencies": {
+    "@cloudflare/puppeteer": "^1.4.0",
     "fuse.js": "^7.5.0",
     "lucide-react": "^1.33.0",
     "react": "^19.2.8",

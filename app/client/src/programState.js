@@ -1,3 +1,5 @@
+import { formatDate } from './format';
+
 // A program's state is derived from its dates (the stored `status` column is not maintained).
 
 function localTodayIso() {
@@ -33,4 +35,20 @@ export function groupProgramsByState(programs) {
     label: g.label,
     items: withSpan.filter((x) => x.state === g.key).sort(g.order).map((x) => x.program),
   })).filter((g) => g.items.length > 0);
+}
+
+export function dateSummary(program) {
+  if (program.date_mode === 'single') return formatDate(program.dates[0]);
+  if (program.date_mode === 'range') return `${formatDate(program.dates[0])} — ${formatDate(program.dates[1])}`;
+  return program.dates.map(formatDate).join('، ');
+}
+
+export function daysCount(program) {
+  if (program.date_mode === 'single') return 1;
+  if (program.date_mode === 'range') {
+    const [a, b] = program.dates;
+    if (!a || !b) return 1;
+    return Math.round((new Date(b) - new Date(a)) / 86400000) + 1;
+  }
+  return program.dates.length;
 }

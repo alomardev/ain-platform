@@ -2,8 +2,10 @@ import { useId } from 'react';
 import { useTheme } from '../theme';
 
 // App mark; the diamond takes the current accent (teal in light mode, gold in dark).
-export default function AinMark({ className = 'h-9 w-9', title = 'عين' }) {
-  const { accent } = useTheme();
+// `color` overrides the theme accent (e.g. the printed profile is always light).
+export default function AinMark({ className = 'h-9 w-9', title = 'عين', color }) {
+  const { accent: themeAccent } = useTheme();
+  const accent = color ?? themeAccent;
   const maskId = useId();
 
   return (

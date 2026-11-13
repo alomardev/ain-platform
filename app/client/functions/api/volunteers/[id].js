@@ -7,7 +7,8 @@ export async function onRequestGet({ env, params }) {
   if (!volunteer) return Response.json({ error: 'not found' }, { status: 404 });
 
   const { results: programs } = await env.DB.prepare(`
-    SELECT pr.id, pr.name, pr.date_mode, pr.dates, part.id AS participation_id, part.role, part.hours, part.date,
+    SELECT pr.id, pr.name, pr.date_mode, pr.dates, pr.category, pr.description, pr.location,
+           pr.executor_name, pr.supervisor_name, pr.beneficiaries, part.id AS participation_id, part.role, part.hours, part.date,
            part.is_supervisor, part.is_deputy
     FROM participations part
     JOIN programs pr ON pr.id = part.program_id
